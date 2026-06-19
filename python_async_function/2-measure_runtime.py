@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Module qui mesure le temps d'exécution moyen de wait_n.
 """
