@@ -15,11 +15,16 @@ async def task_wait_n(n: int, max_delay: int = 10) -> list:
     Returns:
         list: All delays in ascending order.
     """
-    tasks = []
-    for i in range(n):
-        tasks.append(task_wait_random(max_delay))
- 
-    results = []
-    for future in asyncio.as_completed(tasks):
-        results.append(await future)
-    return results
+    delays = await asyncio.gather(
+        *[task_wait_random(max_delay) for _ in range(n)])
+    sorted_delays = []
+    for delay in delays:
+        inserted = False
+        for i, val in enumerate(sorted_delays):
+            if delay < val:
+                sorted_delays.insert(i, delay)
+                inserted = True
+                break
+        if not inserted:
+            sorted_delays.append(delay)
+    return sorted_delays
